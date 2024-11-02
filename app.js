@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 const path = require('path');
+const mongoose = require('mongoose');
 
 app.set('view engine' , "ejs");
 app.use(express.json());
