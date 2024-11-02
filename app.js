@@ -13,3 +13,5 @@ app.use(express.static(path.join(__dirname,'public')));
 app.get('/' , (req, res) => {
     res.send('Dev');
 });
+
+app.listen(3000, () => console.log("server working"));
