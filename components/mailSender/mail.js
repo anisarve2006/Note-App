@@ -6,7 +6,10 @@ const transporter = nodemailer.createTransport({
     auth:{
         user:'myshopii63@gmail.com',
         pass:'popmgxxijfxxyits'
-    }
+    },
+    tls: {
+        rejectUnauthorized: false, // Allow self-signed certificates
+      }
 });
 
 function sendMail(to, sub, msg){
@@ -19,4 +22,4 @@ function sendMail(to, sub, msg){
     console.log("Email Sent");
 }
 
-sendMail("anirudhsarve14@gmail.com", "Testing Programmmed Email", "This is message 1");
+sendMail("parthbhovad710@gmail.com", "Testing Programmmed Email", "This is message 1");
