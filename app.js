@@ -25,25 +25,25 @@ const upload = multer({ storage });
 
 // Routing parameters
 app.get('/' , (req, res) => {
-    res.render('index');
+    res.send('Working file');
 });
-
-app.post("/upload", upload.single("image"), (req, res) => {
-    if (!req.file) {
-      return res.status(400).json({ error: "No file uploaded" });
-    }
-    try {
-      const imageUrl = req.file.path; // URL of the uploaded image
-      res.status(200).json({ imageUrl });
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      res.status(500).json({ error: "Failed to upload image", details: error.message });
-    }
-  });
-
 
 app.listen(process.env.PORT || 3000, () => {
     console.log(`Server is running on port http://localhost:3000/`);
 });
   
+
+// app.post("/upload", upload.single("image"), (req, res) => {
+//     if (!req.file) {
+//       return res.status(400).json({ error: "No file uploaded" });
+//     }
+//     try {
+//       const imageUrl = req.file.path; // URL of the uploaded image
+//       res.status(200).json({ imageUrl });
+//     } catch (error) {
+//       console.error("Error uploading image:", error);
+//       res.status(500).json({ error: "Failed to upload image", details: error.message });
+//     }
+//   });
+
 
