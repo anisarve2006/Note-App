@@ -1,10 +1,13 @@
 require("dotenv").config();  // to read .env file (environment variable)
 const express = require('express');
-const cloudinary = require('./components/imageToUrl/cloudinary.js'); // clodinary, an image hosting site
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const path = require('path');
 const mongoose = require('mongoose'); // database purpose
+const cloudinary = require('./components/imageToUrl/cloudinary.js'); // clodinary, an image hosting site
+const noteRouter = require('./routers/noteRouter.js');
+const userRouter = require('./routers/userRouter.js');
+
 const app = express();
 
 app.set('view engine' , "ejs"); 
@@ -12,6 +15,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname,'public')));
 
+//Routing 
+app.use('/user/',userRouter);
+app.use('/note/', noteRouter);
 
 // Configure multer storage with Cloudinary
 const storage = new CloudinaryStorage({
@@ -25,7 +31,7 @@ const upload = multer({ storage });
 
 // Routing parameters
 app.get('/' , (req, res) => {
-    res.render('registration');
+    res.render('dashboard');
 });
 
 app.listen(process.env.PORT || 3000, () => {

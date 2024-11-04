@@ -1,0 +1,82 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Container Styling */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Header Styling */
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 2rem;
+    color: #4A90E2;
+}
+
+.header p {
+    font-size: 1.1rem;
+    color: #333;
+}
+
+/* Navigation Buttons */
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.nav-buttons button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #4A90E2;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.nav-buttons button:hover {
+    background-color: #357ABD;
+}
+
+/* Content Section */
+.content {
+    text-align: left;
+    width: 100%;
+}
+
+.content h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #4A90E2;
+}
+
+.benefits-list {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+.benefits-list li {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.benefits-list strong {
+    color: #4A90E2;
+}
