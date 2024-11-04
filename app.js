@@ -25,7 +25,7 @@ const upload = multer({ storage });
 
 // Routing parameters
 app.get('/' , (req, res) => {
-    res.send('Working file');
+    res.render('registration');
 });
 
 app.listen(process.env.PORT || 3000, () => {
