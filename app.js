@@ -34,11 +34,6 @@ app.get('/' , (req, res) => {
     res.render('dashboard');
 });
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log(`Server is running on port http://localhost:3000/`);
-});
-  
-
 // app.post("/upload", upload.single("image"), (req, res) => {
 //     if (!req.file) {
 //       return res.status(400).json({ error: "No file uploaded" });
@@ -52,4 +47,9 @@ app.listen(process.env.PORT || 3000, () => {
 //     }
 //   });
 
+
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`Server is running on port http://localhost:3000/`);
+  });
+  
 

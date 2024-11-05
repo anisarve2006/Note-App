@@ -22,4 +22,4 @@ function sendMail(to, sub, msg){
     console.log("Email Sent");
 }
 
-sendMail("parthbhovad710@gmail.com", "Testing Programmmed Email", "This is message 1");
+sendMail("shardulchogale1983@gmail.com", "FCHN Practical Status", "Done or Not");
