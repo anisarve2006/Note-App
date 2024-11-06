@@ -80,3 +80,18 @@
 .benefits-list strong {
     color: #4A90E2;
 }
+
+.logout-div{
+    display: inline;
+}
+
+.absolute{
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.logout-btn{
+    color: red;
+    font-size: larger;
+}
