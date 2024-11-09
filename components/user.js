@@ -20,9 +20,9 @@ const jwt = require("jsonwebtoken");
 const create = async (req, res) => {
   try {
     // File Upload Status
-    if (!req.file) {
-        return res.status(400).json({ error: "No file uploaded" });
-    }
+    // if (!req.file) {
+    //     return res.status(400).json({ error: "No file uploaded" });
+    // }
 
     // User Existence in database status
     let doesExist = await userModel.findOne({ email: req.body.email });
