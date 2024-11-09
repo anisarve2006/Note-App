@@ -1,4 +1,6 @@
 const nodemailer = require('nodemailer');
+
+// configure Nodemailer instance
 const transporter = nodemailer.createTransport({
     secure:true,
     host:'smtp.gmail.com',
@@ -12,14 +14,24 @@ const transporter = nodemailer.createTransport({
       }
 });
 
-function sendMail(to, sub, msg){
-    transporter.sendMail({
-        to:to,
-        subject:sub,
-        html:msg
-    })
-    
-    console.log("Email Sent");
+// function to generate 4 digit code 
+function generateVerificationCode() {
+    return Math.floor(1000 + Math.random() * 9000);
 }
 
-sendMail("shardulchogale1983@gmail.com", "FCHN Practical Status", "Done or Not");
+// function to send email with verification code
+const sendVerificationEmail = async (email, code) =>{
+    try {
+        transporter.sendMail({
+            to:email,
+            subject: 'Email Verification Code',
+            html:`<h1 align='center'>Noto</h1><p>Your verification code is ${code} </p>`
+        })
+        console.log("Verification Email Sent");
+    } catch (error) {
+        console.log("Error sending Email :", error); 
+    }
+    
+}
+
+module.exports = {sendVerificationEmail, generateVerificationCode};
