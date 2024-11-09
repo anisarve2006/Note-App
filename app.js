@@ -1,60 +1,23 @@
 require("dotenv").config();  // to read .env file (environment variable)
 const express = require('express');
-const multer = require("multer");
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const path = require('path');
-const mongoose = require('mongoose'); // database purpose
-const cloudinary = require('./components/imageToUrl/cloudinary.js'); // clodinary, an image hosting site
-const noteRouter = require('./routers/noteRouter.js');
+//const noteRouter = require('./routers/noteRouter.js');
 const userRouter = require('./routers/userRouter.js');
 
 const app = express();
-
 app.set('view engine' , "ejs"); 
 app.use(express.json()); 
 app.use(express.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname,'public')));
 
-main().catch(err => console.log(err));
-
-async function main() {
-  await mongoose.connect('mongodb+srv://NoteApp:NoteApp123@noteappcluster.itxnm.mongodb.net/');
-
-  // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
-}
-
 //Routing 
-app.use('/user/',userRouter);
-app.use('/note/', noteRouter);
-
-// Configure multer storage with Cloudinary
-const storage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: {
-      folder: "uploads",
-      allowed_formats: ["jpg", "png"],
-    },
-  });
-const upload = multer({ storage });
+app.use('/api/user/', userRouter);
+//app.use('/api/note/', noteRouter);
 
 // Routing parameters
 app.get('/' , (req, res) => {
-    res.render('dashboard');
+    res.render('registration');
 });
-
-// app.post("/upload", upload.single("image"), (req, res) => {
-//     if (!req.file) {
-//       return res.status(400).json({ error: "No file uploaded" });
-//     }
-//     try {
-//       const imageUrl = req.file.path; // URL of the uploaded image
-//       res.status(200).json({ imageUrl });
-//     } catch (error) {
-//       console.error("Error uploading image:", error);
-//       res.status(500).json({ error: "Failed to upload image", details: error.message });
-//     }
-//   });
-
 
 app.listen(process.env.PORT || 3000, () => {
     console.log(`Server is running on port http://localhost:3000/`);

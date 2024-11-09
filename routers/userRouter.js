@@ -1,16 +1,23 @@
 const express = require('express');
-const {login, register, remove} = require('../components/useroperations/user.js');
+const multer = require('multer');
+const { create } = require('../components/user');
+const { storage } = require('../config/cloudconfig');
+
 const router = express.Router();
+const upload = multer({ storage });
 
-router.route("/login").get((req, res) => {
-    res.render("login")
-});
-router.route("/login").post(login);
+router.post('/create', upload.single('image'), create);
+// router.route("/login").post(login);
+// router.route('/remove').post(remove);
 
-router.route("/create").get((req, res) => {
-     res.render("registration");
-});
-router.route("/create").post(register);
-
-router.route('/remove').post(remove);
 module.exports = router;
+
+
+
+
+
+
+
+
+
+

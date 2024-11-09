@@ -18,7 +18,7 @@ function sendMail(to, sub, msg){
         subject:sub,
         html:msg
     })
-
+    
     console.log("Email Sent");
 }
 
