@@ -14,7 +14,7 @@ router.post('/send-verification', async (req, res) => {
     const code = generateVerificationCode();
     storeVerificationCode(email, code);
     await sendVerificationEmail(email, code);
-    res.json({ message: 'Verification code sent' });
+    res.json({ message: 'Verification code sent' });  // way to open code page
   });
 // Endpoint to verify the code
 router.post('/verify-code', (req, res) => {
