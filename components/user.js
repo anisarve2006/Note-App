@@ -16,8 +16,8 @@ mongoose.connect(process.env.MONGODB_URI)
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+// Creating a New User Account 
 const create = async (req, res) => {
-  console.log(req.file);
   try {
     // File Upload Status
     if (!req.file) {
@@ -47,36 +47,63 @@ const create = async (req, res) => {
 };
 
 
-module.exports = { create };
+// Login User
+const login = async (req, res) => {
+  try {
+    let user = await user.findOne({email : req.body.email});
+    if (!user ||!(await bcrypt.compare(req.body.password, user.password))) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+    let token = jwt.sign({ email: user.email }, process.env.jwtSecret);
+    res.cookie("token", token, {httpOnly:true});
+    res.json({message : 'Login Successfully'});
+  } catch(error) {
+      console.log(error);
+      return res.status(500).json({message : 'Login Failed'});
+  }
+}
+// Update User 
+const update = async (req, res) => {
+  try {
+    let token = req.cookies.token;
+    if (!token) return res.status(401).json({ message: 'Not authorized' });;
+    const decoded = jwt.verify(token, process.env.jwtSecret);
+    let user = await userModel.findOneAndUpdate({email : decoded.email}, req.body, {new: true});
+    res.json({message : 'User Updated Successfully', user});
 
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({message : 'User Update Failed'});
+  }
+ 
+}
 
+// logout user 
+const logout = async (req, res) => {
+  try {
+    res.clearCookie("token");
+    res.json({message : 'Logged Out Successfully'});
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({message : 'Log Out Failed'});
+  }
 
+}
 
+// Remove User 
+const remove = async (req, res) => {
+  try {
+    let token = req.cookies.token;
+    if (!token) return res.status(401).json({ message: 'Not authorized' });;
+    const decoded = jwt.verify(token, process.env.jwtSecret);
+    const deletionUser = await userModel.deleteOne({email : decoded.email});
+    res.clearCookie("token");
+    res.json({message : 'Accound Deletion Successfully'});
 
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({message : 'Account Deletion Failed'});
+  }
+}
 
-
-// // login Functions
-// const login = async (req, res) => {
-//     res.send("Login Page...");
-//     // try {
-//     //     let user = await userModel.findOne({email: req.body.email});
-//     //     if(user.password === req.body.password){
-//     //         let token = jwt.sign({ email: user.email }, "secret");
-//     //         res.cookie("token", token);
-//     //         res.send("Login successful");
-//     //     }
-//     // } catch (error) {
-//     //     console.log(error);
-//     // }
-    
-// }
-
-// const remove = async (req, res) => {
-//     try {
-//         let user = await userModel.findOneAndDelete({ email: req.body.email });
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
-
-
+module.exports = { create, login, update, logout, remove};
