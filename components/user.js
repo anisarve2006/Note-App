@@ -1,9 +1,5 @@
 require("dotenv").config();
 
-const fs = require('fs');
-const path = require('path');
-const usersFilePath = path.join(__dirname, '../data/users.json');
-
 // Mongoose utils
 const mongoose = require('mongoose');
 const userModel = require("../models/userModel");
@@ -38,8 +34,8 @@ const create = async (req, res) => {
     console.log(req.file.path);
     const newUser = new userModel({profileUrl: req.file.path, username: name, email: email, password: hash});
     await newUser.save();
-    return res.status(201).json({ message: 'User profile created successfully', name, email, password});
-
+    //return res.status(201).json({ message: 'User profile created successfully', name, email, password});
+    res.render('noteHomePage');
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: 'Error uploading profile image', error });
@@ -50,13 +46,14 @@ const create = async (req, res) => {
 // Login User
 const login = async (req, res) => {
   try {
-    let user = await user.findOne({email : req.body.email});
+    let user = await userModel.findOne({email : req.body.email});
     if (!user ||!(await bcrypt.compare(req.body.password, user.password))) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
     let token = jwt.sign({ email: user.email }, process.env.jwtSecret);
     res.cookie("token", token, {httpOnly:true});
-    res.json({message : 'Login Successfully'});
+    //res.json({message : 'Login Successfully'});
+    res.render('../views/noteHomePage');
   } catch(error) {
       console.log(error);
       return res.status(500).json({message : 'Login Failed'});
@@ -70,6 +67,7 @@ const update = async (req, res) => {
     const decoded = jwt.verify(token, process.env.jwtSecret);
     let user = await userModel.findOneAndUpdate({email : decoded.email}, req.body, {new: true});
     res.json({message : 'User Updated Successfully', user});
+    
 
   } catch (error) {
     console.log(error);

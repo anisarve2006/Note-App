@@ -1,7 +1,7 @@
 require("dotenv").config();  // to read .env file (environment variable)
 const express = require('express');
 const path = require('path');
-//const noteRouter = require('./routers/noteRouter');
+const noteRouter = require('./routers/noteRouter');
 const userRouter = require('./routers/userRouter');
 const cookieParser = require('cookie-parser');
 
@@ -14,8 +14,7 @@ app.use(express.static(path.join(__dirname,'public')));
 
 //Routing 
 app.use('/api/user/', userRouter);
-//app.use('/api/note/', noteRouter);
-app.use('/api/verification', verificationRouter)
+app.use('/api/note/', noteRouter);
 
 
 

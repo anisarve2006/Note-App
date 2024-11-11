@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { create } = require('../components/user');
+const { create, login, update, logout, remove } = require('../components/user');
 const { storage } = require('../config/cloudconfig');
 const upload = multer({ storage });
 
+
+// POST routes
 // verification requirements 
 const {sendVerificationEmail, generateVerificationCode} = require('../components/mail');
 const {storeVerificationCode, getVerificationCode} = require('../app');
@@ -31,7 +33,9 @@ router.post('/verify-code', (req, res) => {
 
 
 router.post('/create', upload.single('image'), create);
-// router.route("/login").post(login);
-// router.route('/remove').post(remove);
+router.route("/login").post(login);
+router.route('/update').post(update);
+router.route("/logout").post(logout);
+router.route('/remove').post(remove);
 
 module.exports = router;
