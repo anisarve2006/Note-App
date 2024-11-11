@@ -23,8 +23,8 @@
         
         <!-- Navigation Section -->
         <nav class="nav-buttons">
-            <button onclick="redirectTo('login')">Login</button>
-            <button onclick="redirectTo('register')">Register</button>
+            <button onclick="redirectTo('userlogin')">Login</button>
+            <button onclick="redirectTo('registeration')">Register</button>
         </nav>
 
         <!-- Main Content Section -->
@@ -39,7 +39,12 @@
             </ul>
         </main>
     </div>
-
+    <form action="/api/user/create" method="POST" enctype="multipart/form-data">
+        Enter Name : <input type="text" name="name" id="">
+        <label for="avatar">Select Avatar:</label>
+        <input type="file" id="avatar" name="image" accept="image/png, image/jpeg">
+        <input type="submit" value="Submit">
+    </form>
     <script src="/javascripts/dashboardScript.js"></script>
 </body>
 </html>

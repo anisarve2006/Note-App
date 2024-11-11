@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Note</title>
+    <style>
+        h1{
+            margin:10px;
+        }
+       .note {
+         margin: 20px;
+         width:200px;
+         height:50px;
+         background-color: #acacde;
+         display:flex;
+         align-items: center;
+         justify-content: center;
+         border-radius: 5px;
+       }
+    </style>
+</head>
+<body>
+    <h1>Create New Note</h1>
+    <button onclick="">Create Note</button>
+    <div class="note" id="noteId1">Note 1</div>   
+    <div class="note" id="noteId2">Note 1</div>   
+    <div class="note" id="noteId3">Note 1</div>   
+     <script>
+        window.onclick = (e) => {
+            if(e.target.className === "note"){
+                //console.log(e.target.id);
+                window.location.href = `/note/read/${e.target.id}`;
+            }
+        }
+     </script>
+</body>
+</html>

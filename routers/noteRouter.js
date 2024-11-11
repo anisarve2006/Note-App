@@ -1,8 +1,14 @@
 const express = require('express');
-const {create, read, remove, edit} = require('../components/noteoperations/note.js');
+const { create, update, read, remove } = require('../components/note');
 const router = express.Router();
-router.route("/create").post(create);
-router.route("/read").post(read);
-router.route('/remove').post(remove);
-router.route('/edit').post(edit);
+
+// Post Routes
+router.post('/create', create);
+router.post('/update/:id', update);
+
+// Get Routes
+router.get('/create', (req, res) => res.render('createNote')); // Adjust path
+router.get('/read/:id', read);
+router.get('/remove/:id', remove);
+
 module.exports = router;
