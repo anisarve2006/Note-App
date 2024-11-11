@@ -1,4 +1,5 @@
 const express = require('express');
+const {login, register, remove} = require('../components/useroperations/user.js');
 const router = express.Router();
 const multer = require('multer');
 const { create, login, update, logout, remove } = require('../components/user');
@@ -34,8 +35,12 @@ router.post('/verify-code', (req, res) => {
 
 router.post('/create', upload.single('image'), create);
 router.route("/login").post(login);
-router.route('/update').post(update);
-router.route("/logout").post(logout);
+
+router.route("/create").get((req, res) => {
+     res.render("registration");
+});
+router.route("/create").post(register);
+
 router.route('/remove').post(remove);
 
 module.exports = router;
