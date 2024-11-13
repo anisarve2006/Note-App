@@ -1,5 +1,4 @@
 const express = require('express');
-const {login, register, remove} = require('../components/useroperations/user.js');
 const router = express.Router();
 const multer = require('multer');
 const { create, login, update, logout, remove } = require('../components/user');
@@ -10,7 +9,7 @@ const upload = multer({ storage });
 // POST routes
 // verification requirements 
 const {sendVerificationEmail, generateVerificationCode} = require('../components/mail');
-const {storeVerificationCode, getVerificationCode} = require('../app');
+const {storeVerificationCode, getVerificationCode} = require('../config/verification');
 // Endpoint to send the verification code
 router.post('/send-verification', async (req, res) => {
     const email = req.body.email;
@@ -39,7 +38,7 @@ router.route("/login").post(login);
 router.route("/create").get((req, res) => {
      res.render("registration");
 });
-router.route("/create").post(register);
+router.route("/create").post(create);
 
 router.route('/remove').post(remove);
 
