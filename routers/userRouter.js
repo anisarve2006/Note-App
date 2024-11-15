@@ -35,11 +35,15 @@ router.post('/verify-code', (req, res) => {
 router.post('/create', upload.single('image'), create);
 router.route("/login").post(login);
 
+router.route("/login").get((req, res) => res.render("login"));
+
 router.route("/create").get((req, res) => {
      res.render("registration");
 });
 router.route("/create").post(create);
 
 router.route('/remove').post(remove);
+
+router.route("/forgotpassword").get((req, res) => res.render("forgotPassword"));
 
 module.exports = router;
