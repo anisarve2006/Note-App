@@ -19,7 +19,7 @@ app.use('/api/note/', noteRouter);
 
 // Routing parameters
 app.get('/' , (req, res) => {
-    res.render('registration');
+    res.render('dashboard');
 });
 
 

@@ -53,7 +53,7 @@ const login = async (req, res) => {
     let token = jwt.sign({ email: user.email }, process.env.jwtSecret);
     res.cookie("token", token, {httpOnly:true});
     //res.json({message : 'Login Successfully'});
-    res.render('../views/noteHomePage');
+    res.render('noteHomePage');
   } catch(error) {
       console.log(error);
       return res.status(500).json({message : 'Login Failed'});
