@@ -8,7 +8,6 @@ router.post('/new',isLoggedIn, create);
 router.post('/update/:id',isLoggedIn, update);
 
 // Get Routes
-router.get('/create',isLoggedIn, (req, res) => res.render('createNote')); // Adjust path
 router.get("/new",isLoggedIn, (req, res) => res.render("createNote"));
 router.get('/:id',isLoggedIn, read);
 router.get('/remove/:id',isLoggedIn, remove);
