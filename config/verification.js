@@ -9,7 +9,13 @@ function getVerificationCode(email) {
   return verificationCodes.get(email);
 }
 
+
+function deleteVerificationCode(email) {
+  verificationCodes.delete(email);
+}
+
 module.exports = {
     storeVerificationCode,
     getVerificationCode,
+    deleteVerificationCode,
   };
