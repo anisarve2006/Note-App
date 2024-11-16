@@ -9,14 +9,14 @@ const upload = multer({ storage });
 // POST routes
 // verification requirements 
 const {sendVerificationEmail, generateVerificationCode} = require('../components/mail');
-const {storeVerificationCode, getVerificationCode} = require('../config/verification');
+const {storeVerificationCode, getVerificationCode, deleteVerificationCode} = require('../config/verification');
 // Endpoint to send the verification code
 router.post('/send-verification', async (req, res) => {
     const email = req.body.email;
     const code = generateVerificationCode();
     storeVerificationCode(email, code);
     await sendVerificationEmail(email, code);
-    res.status(204).send();  // way to open code page
+    res.render('codeVerification', { email });
   });
 // Endpoint to verify the code
 router.post('/verify-code', (req, res) => {
@@ -24,8 +24,9 @@ router.post('/verify-code', (req, res) => {
     const storedCode = getVerificationCode(email);
   
     if (storedCode && storedCode === parseInt(code, 10)) {
-      verificationCodes.delete(email); // Clear code on successful verification
-      res.json({ message: 'Email verified successfully' });
+      deleteVerificationCode(email); // Clear code on successful verification
+      console.log('User verified');
+      res.render('noteHomePage');
     } else {
       res.status(400).json({ message: 'Invalid or expired verification code' });
     }
