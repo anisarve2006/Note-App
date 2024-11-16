@@ -16,7 +16,7 @@ router.post('/send-verification', async (req, res) => {
     const code = generateVerificationCode();
     storeVerificationCode(email, code);
     await sendVerificationEmail(email, code);
-    res.json({ message: 'Verification code sent' });  // way to open code page
+    res.status(204).send();  // way to open code page
   });
 // Endpoint to verify the code
 router.post('/verify-code', (req, res) => {
@@ -32,18 +32,9 @@ router.post('/verify-code', (req, res) => {
   });
 
 
-router.post('/create', upload.single('image'), create);
-router.route("/login").post(login);
-
-router.route("/login").get((req, res) => res.render("login"));
-
-router.route("/create").get((req, res) => {
-     res.render("registration");
-});
-router.route("/create").post(create);
-
-router.route('/remove').post(remove);
-
+router.route("/create").get((req, res) => res.render("registration")).post(upload.single('image'), create);
+router.route("/login").get((req, res) => res.render("login")).post(login);
 router.route("/forgotpassword").get((req, res) => res.render("forgotPassword"));
 
 module.exports = router;
+
