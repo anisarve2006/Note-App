@@ -36,7 +36,5 @@ router.route("/create").get((req, res) => res.render("registration")).post(uploa
 router.route("/login").get((req, res) => res.render("login")).post(login);
 router.route("/forgotpassword").get((req, res) => res.render("forgotPassword"));
 
-
-
-
 module.exports = router;
+
