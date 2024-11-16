@@ -33,7 +33,8 @@ const create = async (req, res) => {
     const hash = await bcrypt.hash(password, salt);
     console.log(req.file.path);
     const newUser = new userModel({profileUrl: req.file.path, name: name, email: email, password: hash});
-    await newUser.save();
+    let token = jwt.sign({ email }, process.env.jwtSecret);
+    res.cookie("token", token, {httpOnly:true});
     //return res.status(201).json({ message: 'User profile created successfully', name, email, password});
     res.render('noteHomePage');
     } catch (error) {
@@ -80,7 +81,7 @@ const update = async (req, res) => {
 const logout = async (req, res) => {
   try {
     res.clearCookie("token");
-    res.json({message : 'Logged Out Successfully'});
+    res.redirect("/");
   } catch (error) {
     console.log(error);
     return res.status(500).json({message : 'Log Out Failed'});

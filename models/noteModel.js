@@ -5,6 +5,9 @@ const noteSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "user"
     },
+    notePicture : {
+        type:String,
+    },
     title:{
         type:String,
         required:true

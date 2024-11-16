@@ -11,28 +11,23 @@
        .note {
          margin: 20px;
          width:200px;
-         height:50px;
+         /* height:50px; */
          background-color: #acacde;
-         display:flex;
+         /* display:flex;
          align-items: center;
-         justify-content: center;
+         justify-content: center; */
          border-radius: 5px;
        }
     </style>
 </head>
 <body>
     <h1>Create New Note</h1>
-    <button onclick="">Create Note</button>
-    <div class="note" id="noteId1">Note 1</div>   
-    <div class="note" id="noteId2">Note 1</div>   
-    <div class="note" id="noteId3">Note 1</div>   
-     <script>
-        window.onclick = (e) => {
-            if(e.target.className === "note"){
-                //console.log(e.target.id);
-                window.location.href = `/note/read/${e.target.id}`;
-            }
-        }
-     </script>
+    <button onclick="window.location='new'">Create Note</button>
+    <% for(note of allNotes){ %>
+        <div class="note" id="noteId1">
+        <h4><%= note.title %></h4>
+        <a href="<%= note._id %>">See more</a>
+        </div>
+  <%  } %>
 </body>
 </html>

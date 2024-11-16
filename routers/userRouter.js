@@ -4,6 +4,7 @@ const multer = require('multer');
 const { create, login, update, logout, remove } = require('../components/user');
 const { storage } = require('../config/cloudconfig');
 const upload = multer({ storage });
+const isLoggedIn = require("../config/isLoggedIn");
 
 
 // POST routes
@@ -33,9 +34,10 @@ router.post('/verify-code', (req, res) => {
   });
 
 
-router.route("/create").get((req, res) => res.render("registration")).post(upload.single('image'), create);
-router.route("/login").get((req, res) => res.render("login")).post(login);
-router.route("/forgotpassword").get((req, res) => res.render("forgotPassword"));
+router.route("/create").get(isLoggedIn,(req, res) => res.render("registration")).post(upload.single('image'), create);
+router.route("/login").get(isLoggedIn,(req, res) => res.render("login")).post(login);
+router.route("/forgotpassword").get(isLoggedIn,(req, res) => res.render("forgotPassword"));
+router.route("/logout").post(logout);
 
 module.exports = router;
 
