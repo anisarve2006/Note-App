@@ -54,7 +54,7 @@
 
 <div class="container">
   <h2>Email Verification</h2>
-  <form action="/api/verify-code" method="POST">
+  <form action="/api/verify-code" method="POST" id="userForm">
     <!-- Hidden email field, assuming the email is passed in the form action or as a hidden input -->
     <input type="hidden" name="email" value="user-email@example.com">
     
@@ -65,6 +65,5 @@
     <button type="submit" class="btn-submit">Verify</button>
   </form>
 </div>
-
 </body>
 </html>

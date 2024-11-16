@@ -19,7 +19,7 @@ const create = async (req, res) => {
     // if (!req.file) {
     //     return res.status(400).json({ error: "No file uploaded" });
     // }
-
+    console.log(req.body);
     // User Existence in database status
     let doesExist = await userModel.findOne({ email: req.body.email });
     if (doesExist) {
@@ -32,7 +32,7 @@ const create = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
     console.log(req.file.path);
-    const newUser = new userModel({profileUrl: req.file.path, username: name, email: email, password: hash});
+    const newUser = new userModel({profileUrl: req.file.path, name: name, email: email, password: hash});
     await newUser.save();
     //return res.status(201).json({ message: 'User profile created successfully', name, email, password});
     res.render('noteHomePage');
