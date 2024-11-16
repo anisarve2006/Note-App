@@ -1,14 +1,17 @@
 const express = require('express');
-const { create, update, read, remove } = require('../components/note');
+const { create, update, read, remove, showAll } = require('../components/note');
 const router = express.Router();
+const isLoggedIn = require("../config/isLoggedIn");
 
 // Post Routes
-router.post('/create', create);
-router.post('/update/:id', update);
+router.post('/new',isLoggedIn, create);
+router.post('/update/:id',isLoggedIn, update);
 
 // Get Routes
-router.get('/create', (req, res) => res.render('createNote')); // Adjust path
-router.get('/read/:id', read);
-router.get('/remove/:id', remove);
+router.get('/create',isLoggedIn, (req, res) => res.render('createNote')); // Adjust path
+router.get("/new",isLoggedIn, (req, res) => res.render("createNote"));
+router.get('/:id',isLoggedIn, read);
+router.get('/remove/:id',isLoggedIn, remove);
+router.get("/",isLoggedIn, showAll);
 
 module.exports = router;
