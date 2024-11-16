@@ -1,23 +1,23 @@
 const userModel = require("../models/userModel");
 const noteModel = require("../models/noteModel")
 const jwt = require("jsonwebtoken");
+
+// Functions 
 const create = async (req, res) => {
     try {
-        let token = req.cookies.token;
-        if(!token) return res.json({message : "Invalid token"})
-        let decodedEmail = jwt.verify(token, process.env.jwtSecret);
-        let user = await userModel.findOne({email: decodedEmail.email});
+        let user = await userModel.findOne({email: req.user.email});
+        if (!user) return res.redirect("/login");
         let note = await noteModel.create({
             title: req.body.title,
-            notePicture: req.body.notePicture,
+            //notePicture: req.body.notePicture,
+            notePicture: req.file.path,
             content: req.body.content,
-            user: user._id,
-            createdAt: new Date(),
-            updatedAt: new Date()
-        })
-       await user.notes.push(note._id);
+            userId: user._id,
+        });
+        // Add the note to the user's notes array
+        await user.notes.push(note._id);
         await user.save();
-        //res.json({message:"Note created successful"});
+       // Redirect to the note home page or render a success page
         res.render('noteHomePage');
     } catch (error) {
         console.log(error);
@@ -29,42 +29,50 @@ const create = async (req, res) => {
 //Show Route
 const showAll = async (req, res) => {
     try {
-        const allNotes = await noteModel.find();
+        console.log(req.user);
+        let user = await userModel.findOne({email: req.user.email});
+        const allNotes = await noteModel.find({userId: user._id});
         res.render("noteHomePage", { allNotes });
-    } catch (error) {
-        
-    }
-}
-
-const read = async (req, res) => {  
-    try { 
-        let note = await noteModel.findOne({_id: req.params.id}); 
-        if(!note) return res.json({error:"Note not found"});
-        //res.json(note);  // way to open code page
-        res.render("viewNote", { note });
     } catch (error) {
         console.log(error);  
         res.json({error:"Something went wrong"});
     }
-    
 }
+
+const read = async (req, res) => {
+    try {
+        const note = await noteModel.findOne({ _id: req.params.id, userId: req.user.id });
+        if (!note) {
+            return res.json({ error: "Note not found or unauthorized access" });
+        }
+        res.render("viewNote", { note });
+    } catch (error) {
+        console.error(error);
+        res.json({ error: "Something went wrong" });
+    }
+};
 
 const remove = async (req, res) => {
     try {
-        await noteModel.findOneAndDelete({_id: req.params.id});
-        res.json({message:"Note Deleted successfully"});
+        const note = await noteModel.findOneAndDelete({ _id: req.params.id });
+        if (!note) {
+            return res.json({ error: "Note not found" });
+        }
+        res.json({ message: "Note deleted successfully" });
     } catch (error) {
-        console.log(error);
-        res.json({error:"Something went wrong"});
+        console.error(error);
+        res.json({ error: "Something went wrong" });
     }
-    
 }
 
 const update = async (req, res) => {
     try {
-        let note = await noteModel.findOneAndUpdate({_id: req.params.id}, {content : req.body.content});
+        let note = await noteModel.findOneAndUpdate({_id: req.params.id}, {content : req.body.content}, {new: true});
         note.updatedAt = new Date();
-        res.json({message:"Note edited successful"});
+        if (!note) {
+            return res.status(404).json({ error: "Note not found" });
+        }
+        res.render("viewNote", { note });
     } catch (error) {
         console.log(error);
         res.json({error:"Something went wrong"});

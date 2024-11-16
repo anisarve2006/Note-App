@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const noteSchema = mongoose.Schema({
-    user: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "user"
     },
@@ -17,7 +17,7 @@ const noteSchema = mongoose.Schema({
         required:true
     },
     date:{
-        type:String,
+        type:Date,
         default: Date.now
     },
     createdAt:{
