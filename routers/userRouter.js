@@ -36,6 +36,7 @@ router.post('/verify-code', (req, res) => {
 router.route("/create").get((req, res) => res.render("registration")).post(upload.single('image'), create);
 router.route("/login").get((req, res) => res.render("login")).post(login);
 router.route("/forgotpassword").get((req, res) => res.render("forgotPassword"));
+router.route("/logout").post(logout)
 
 module.exports = router;
 
