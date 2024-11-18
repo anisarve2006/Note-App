@@ -19,7 +19,7 @@ const create = async (req, res) => {
     // if (!req.file) {
     //     return res.status(400).json({ error: "No file uploaded" });
     // }
-    console.log(req.body);
+    // console.log(req.body);
     // User Existence in database status
     let doesExist = await userModel.findOne({ email: req.body.email });
     if (doesExist) {
@@ -31,12 +31,14 @@ const create = async (req, res) => {
     //// hasing the password
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
-    console.log(req.file.path);
-    const newUser = new userModel({profileUrl: req.file.path, name: name, email: email, password: hash});
+    // console.log(req.file.path);
+    // profileUrl: req.file.path, 
+    const newUser = new userModel({name: name, email: email, password: hash});
+    await newUser.save();
     let token = jwt.sign({ email }, process.env.jwtSecret);
     res.cookie("token", token, {httpOnly:true});
     //return res.status(201).json({ message: 'User profile created successfully', name, email, password});
-    res.render('noteHomePage');
+    res.redirect('/api/note/');
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: 'Error uploading profile image', error });
@@ -54,7 +56,7 @@ const login = async (req, res) => {
     let token = jwt.sign({ email: user.email }, process.env.jwtSecret);
     res.cookie("token", token, {httpOnly:true});
     //res.json({message : 'Login Successfully'});
-    res.render('noteHomePage');
+    res.redirect('/api/note/');
   } catch(error) {
       console.log(error);
       return res.status(500).json({message : 'Login Failed'});

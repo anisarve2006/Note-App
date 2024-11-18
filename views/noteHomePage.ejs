@@ -1,33 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create New Note</title>
     <style>
-        h1{
-            margin:10px;
+        h1 {
+            margin: 10px;
         }
-       .note {
-         margin: 20px;
-         width:200px;
-         /* height:50px; */
-         background-color: #acacde;
-         /* display:flex;
+
+        .note {
+            margin: 20px;
+            width: 200px;
+            /* height:50px; */
+            background-color: #acacde;
+            /* display:flex;
          align-items: center;
          justify-content: center; */
-         border-radius: 5px;
-       }
+            border-radius: 5px;
+        }
     </style>
 </head>
+
 <body>
-    <h1>Create New Note</h1>
-    <button onclick="window.location='new'">Create Note</button>
-    <% for(note of allNotes){ %>
-        <div class="note" id="noteId1">
-        <h4><%= note.title %></h4>
-        <a href="<%= note._id %>">See more</a>
-        </div>
-  <%  } %>
+    <h1>
+        <%= user.name %>, it's great to see you
+    </h1>
+    <h3>Create New Note</h3>
+    <button onclick="window.location='/api/note/new'">Create Note</button>
+    <h3>Your All Notes</h3>
+    <% if (user.notes.length === 0){ %>
+        <p>You Don't have any notes. Let's create your first note</p>
+        <% }else{ %>
+            <% for(note of user.notes) { %>
+                <div class="note" id="noteId1">
+                    <h4>
+                        <%= note.title %>
+                    </h4>
+                    <a href="/api/note/<%= note._id %>">See more</a>
+                </div>
+                <% } %>
+                    <% } %>
 </body>
+
 </html>

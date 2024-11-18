@@ -6,11 +6,11 @@ const jwt = require("jsonwebtoken");
 const create = async (req, res) => {
     try {
         let user = await userModel.findOne({email: req.user.email});
-        if (!user) return res.redirect("/login");
+        if (!user) return res.redirect("/api/user/login");
         let note = await noteModel.create({
             title: req.body.title,
-            //notePicture: req.body.notePicture,
-            notePicture: req.file.path,
+            notePicture: req.body.notePicture,
+            // notePicture: req.file.path,
             content: req.body.content,
             userId: user._id,
         });
@@ -18,7 +18,7 @@ const create = async (req, res) => {
         await user.notes.push(note._id);
         await user.save();
        // Redirect to the note home page or render a success page
-        res.render('noteHomePage');
+        res.redirect('/api/note/');
     } catch (error) {
         console.log(error);
         res.json({message:"Something went wrong"});
@@ -26,13 +26,13 @@ const create = async (req, res) => {
     
 }
 
-//Show Route
-const showAll = async (req, res) => {
+//Index Route
+const index = async (req, res) => {
     try {
-        console.log(req.user);
-        let user = await userModel.findOne({email: req.user.email});
-        const allNotes = await noteModel.find({userId: user._id});
-        res.render("noteHomePage", { allNotes });
+        // console.log(req.user);
+        let user = await userModel.findOne({email: req.user.email}).populate("notes");
+        // const allNotes = await noteModel.find({userId: user._id});
+        res.render("noteHomePage", { user });
     } catch (error) {
         console.log(error);  
         res.json({error:"Something went wrong"});
@@ -41,7 +41,9 @@ const showAll = async (req, res) => {
 
 const read = async (req, res) => {
     try {
-        const note = await noteModel.findOne({ _id: req.params.id, userId: req.user.id });
+        const note = await noteModel.findOne({ _id: req.params.id });
+        // console.log(note);
+        
         if (!note) {
             return res.json({ error: "Note not found or unauthorized access" });
         }
@@ -85,5 +87,5 @@ module.exports = {
     update,
     read,
     remove,
-    showAll,
+    index,
 }
