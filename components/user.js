@@ -31,9 +31,8 @@ const create = async (req, res) => {
     //// hasing the password
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
-    // console.log(req.file.path);
-    // profileUrl: req.file.path, 
-    const newUser = new userModel({name: name, email: email, password: hash});
+    console.log(req.file.path);
+    const newUser = new userModel({profileUrl: req.file.path, name: name, email: email, password: hash});
     await newUser.save();
     let token = jwt.sign({ email }, process.env.jwtSecret);
     res.cookie("token", token, {httpOnly:true});

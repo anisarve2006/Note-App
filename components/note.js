@@ -7,10 +7,11 @@ const create = async (req, res) => {
     try {
         let user = await userModel.findOne({email: req.user.email});
         if (!user) return res.redirect("/api/user/login");
+        console.log(req.file);
         let note = await noteModel.create({
             title: req.body.title,
-            notePicture: req.body.notePicture,
-            // notePicture: req.file.path,
+            // notePicture: req.body.notePicture,
+            notePicture: req.file.path,
             content: req.body.content,
             userId: user._id,
         });
