@@ -4,8 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Create New Note</title>
     <style>
+        body{
+            background-color: rgb(212, 241, 239);
+        }
+        .grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            padding: 10px;
+            margin: 10px;
+        }
         h1 {
             margin: 10px;
         }
@@ -13,12 +24,22 @@
         .note {
             margin: 20px;
             width: 200px;
+            height:100px;
             /* height:50px; */
-            background-color: #acacde;
+            background-color: #ffaaaa;
+            padding:7px;
             /* display:flex;
          align-items: center;
          justify-content: center; */
             border-radius: 5px;
+        }
+        #readBtn{
+            float:left;
+            margin-right: 10px;
+        }
+        #delBtn{
+            float:right;
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -30,18 +51,21 @@
     <h3>Create New Note</h3>
     <button onclick="window.location='/api/note/new'">Create Note</button>
     <h3>Your All Notes</h3>
-    <% if (user.notes.length === 0){ %>
-        <p>You Don't have any notes. Let's create your first note</p>
-        <% }else{ %>
-            <% for(note of user.notes) { %>
-                <div class="note" id="noteId1">
-                    <h4>
-                        <%= note.title %>
-                    </h4>
-                    <a href="/api/note/<%= note._id %>">See more</a>
-                </div>
-                <% } %>
+    <div class="grid">
+        <% if (user.notes.length === 0){ %>
+            <p>You Don't have any notes. Let's create your first note</p>
+            <% }else{ %>
+                <% for(note of user.notes) { %>
+                    <div class="note" id="noteId1">
+                        <h4>
+                            <%= note.title %>
+                        </h4>
+                        <span id="readBtn"><a href="/api/note/read/<%= note._id %>">See more</a></span>
+                        <span id="delBtn"><a href="/api/note/remove/<%= note._id%>"><i class="fa-solid fa-trash"></i></a></span>
+                        
+                    </div>
                     <% } %>
+                    <% } %>
+    </div>
 </body>
-
 </html>
