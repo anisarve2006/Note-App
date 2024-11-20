@@ -48,6 +48,8 @@ const read = async (req, res) => {
         if (!note) {
             return res.json({ error: "Note not found or unauthorized access" });
         }
+        console.log(note);
+        console.log(note.id);
         res.render("viewNote", { note });
     } catch (error) {
         console.error(error);
@@ -70,8 +72,11 @@ const remove = async (req, res) => {
 
 const update = async (req, res) => {
     try {
-        let note = await noteModel.findOneAndUpdate({_id: req.params.id}, {content : req.body.content}, {new: true});
+        let note = await noteModel.findOneAndUpdate({_id: req.params.id}, {title : req.body.title, content : req.body.content}, {new: true});
         note.updatedAt = new Date();
+        console.log(note.title);
+        console.log(note.content);
+
         if (!note) {
             return res.status(404).json({ error: "Note not found" });
         }
