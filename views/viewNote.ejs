@@ -1,12 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Note Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+    }
+
+    .note-container {
+      width: 400px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .note-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input, textarea {
+      width: 95%;
+      font-size: 16px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      background-color: rgb(235, 235, 235);
+      resize: none;
+    }
+    #inputContent{
+        display:none;
+    }
+    input:disabled, textarea:disabled {
+      background-color: rgb(200, 200, 200);
+      color: #555;
+    }
+    .btn {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-edit {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    .btn-edit:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-update {
+      background-color: #28a745;
+      color: #fff;
+      display: none;
+    }
+
+    .btn-update:hover {
+      background-color: #218838;
+    }
+  </style>
 </head>
 <body>
-    <h1><%= note.title %></h1>
-    <p> <%= note.content %></p>
+  <div class="note-container">
+    <h2>Your Note</h2>
+    <form id="noteForm" action="/api/note/update/<%= note._id %>" method="POST">
+      <!-- Title Field -->
+      <input 
+        type="text" 
+        name="title" 
+        id="title" 
+        value="<%= note.title %>" 
+        disabled 
+      />
+      <input type="text" name="content" id="inputContent">
+      <!-- Content Field -->
+      <textarea  
+        id="content" 
+        rows="1" 
+        disabled 
+      ><%= note.content %></textarea>
+
+      <!-- Update Button -->
+      <button type="submit" id="updateBtn" class="btn btn-update">Update</button>
+    </form>
+
+    <!-- Edit Button -->
+    <button id="editBtn" class="btn btn-edit" onclick="enableEditing()">Edit</button>
+  </div>
+
+  <script>
+    // Function to enable editing
+    function enableEditing() {
+      document.getElementById('title').removeAttribute('disabled');
+      const contentField = document.getElementById('content');
+      contentField.removeAttribute('disabled');
+      document.getElementById('editBtn').style.display = 'none';
+      document.getElementById('updateBtn').style.display = 'block';
+
+      // Adjust height when enabling editing
+      adjustHeight(contentField);
+    }
+
+    // Adjust textarea height dynamically
+    function adjustHeight(el) {
+      el.style.height = 'auto'; // Reset height to calculate new height
+      el.style.height = el.scrollHeight + 'px'; // Set height to match content
+    }
+
+    // Auto-resize on input
+    document.getElementById('content').addEventListener('input', function () {
+      adjustHeight(this);
+      document.getElementById('inputContent').value = this.value; // Update input field value
+    });
+
+    // Adjust the height initially to match content
+    window.addEventListener('load', function () {
+      const contentField = document.getElementById('content');
+      adjustHeight(contentField);
+    });
+  </script>
 </body>
 </html>
