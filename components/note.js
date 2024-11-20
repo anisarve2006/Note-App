@@ -63,7 +63,7 @@ const remove = async (req, res) => {
         if (!note) {
             return res.json({ error: "Note not found" });
         }
-        res.json({ message: "Note deleted successfully" });
+        res.redirect('/api/note/');
     } catch (error) {
         console.error(error);
         res.json({ error: "Something went wrong" });
