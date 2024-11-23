@@ -1,6 +1,7 @@
 const userModel = require("../models/userModel");
 const noteModel = require("../models/noteModel")
 const jwt = require("jsonwebtoken");
+const cloudinary = require('cloudinary').v2;
 
 // Functions 
 const create = async (req, res) => {
@@ -8,10 +9,15 @@ const create = async (req, res) => {
         let user = await userModel.findOne({email: req.user.email});
         if (!user) return res.redirect("/api/user/login");
         console.log(req.file);
+
+        // Getting Images 
+        const files = req.files;
+        const uploadedUrls = files.map((file) => file.path);
+
         let note = await noteModel.create({
             title: req.body.title,
             // notePicture: req.body.notePicture,
-            notePicture: req.file.path,
+            notePicture: uploadedUrls,
             content: req.body.content,
             userId: user._id,
         });
@@ -44,13 +50,14 @@ const read = async (req, res) => {
     try {
         const note = await noteModel.findOne({ _id: req.params.id });
         // console.log(note);
+        const images = note ? note.notePicture : [];
         
         if (!note) {
             return res.json({ error: "Note not found or unauthorized access" });
         }
         console.log(note);
         console.log(note.id);
-        res.render("viewNote", { note });
+        res.render("viewNote", { note, images});
     } catch (error) {
         console.error(error);
         res.json({ error: "Something went wrong" });
@@ -71,22 +78,51 @@ const remove = async (req, res) => {
 }
 
 const update = async (req, res) => {
+    console.log('Request Body', req.body);
     try {
-        let note = await noteModel.findOneAndUpdate({_id: req.params.id}, {title : req.body.title, content : req.body.content}, {new: true});
-        note.updatedAt = new Date();
-        console.log(note.title);
-        console.log(note.content);
+        const { title, content, selectedImages } = req.body;
+        const noteId = req.params.id;
+        const urls = JSON.parse(selectedImages);
 
-        if (!note) {
-            return res.status(404).json({ error: "Note not found" });
+        // Fetch the existing note
+        const note = await noteModel.findById(noteId);
+        if (!note) return res.status(404).json({ message: 'Note not found' });
+        // Identify images to delete
+        const toDelete = note.notePicture.filter((url) => !urls.includes(url));
+        // Delete images from Cloudinary
+        for (const url of toDelete) {
+            const publicId = extractPublicId(url);
+            try {
+              if (publicId) {
+                await cloudinary.uploader.destroy(publicId);
+                console.log(`Deleted from Cloudinary: ${publicId}`);
+              }
+            } catch (error) {
+              console.error(`Error deleting ${publicId} from Cloudinary:`, error);
+            }
         }
-        res.render("viewNote", { note });
+        
+        // Update the Note in MongoDB
+        note.title = title;
+        note.content = content;
+        note.notePicture = urls;
+        await note.save();
+        res.json({ message: 'Note updated successfully', note });
+          
     } catch (error) {
         console.log(error);
-        res.json({error:"Something went wrong"});
+        res.json({ message: 'Note updation failed'});
     }
-    
 }
+
+// Utility: Extract public ID from Cloudinary URL
+const extractPublicId = (url) => {
+    const parts = url.split('/');
+    const fileName = parts[parts.length - 1];
+    const publicId = fileName.split('.')[0];
+    const folder = parts[parts.length - 2];
+    return `${folder}/${publicId}`;
+};
 
 module.exports = {  
     create,

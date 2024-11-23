@@ -5,9 +5,13 @@ const noteSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "user"
     },
-    notePicture : [{
-        type:String, 
-    }],
+    notePicture: { 
+        type: [String],    // Array of image URLs
+        default: [] 
+    }, 
+    // notePicture : [{
+    //     type:String, 
+    // }],
     title:{
         type:String,
         required:true
