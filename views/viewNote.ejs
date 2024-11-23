@@ -137,6 +137,11 @@
       <a href="/api/note/remove/<%= note._id %>" style="color:#000;"><i class="fa-solid fa-trash"></i></a>
     </div>
     <h2>Your Note</h2>
+    <form id="imageForm" method="POST" action="/api/note/addImages/<%= note._id %>" enctype="multipart/form-data">
+      <h2>Upload New Images</h2>
+      <input type="file" name="images" id="images" multiple>
+      <input type="submit" value="Upload">
+    </form>
     <form id="noteForm" action="/api/note/update/<%= note._id %>" method="POST">
       <!-- Title Field -->
       <input 
@@ -154,12 +159,6 @@
         disabled 
       ><%= note.content %></textarea>
       <!-- Image Section -->
-      <!-- <form action="/upload" method="POST" enctype="multipart/form-data">
-        <h2>Upload New Images</h2>
-        <input type="file" name="images" multiple>
-        <button type="submit">Upload</button>
-      </form> -->
-
       <div class="image-container">
         <% images.forEach((url, index) => { %>
           <div class="image-box">
