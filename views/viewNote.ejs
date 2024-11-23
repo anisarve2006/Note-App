@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" />
   <title>Note Page</title>
   <style>
     body {
@@ -25,6 +25,23 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
+    img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-right: 5px;
+      position: relative;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      color: red;
+      cursor: pointer;
+    }
+
     .note-container h2 {
       text-align: center;
       margin-bottom: 20px;
@@ -40,13 +57,16 @@
       background-color: rgb(235, 235, 235);
       resize: none;
     }
-    #inputContent{
-        display:none;
+
+    #inputContent {
+      display: none;
     }
+
     input:disabled, textarea:disabled {
       background-color: rgb(200, 200, 200);
       color: #555;
     }
+
     .btn {
       width: 100%;
       padding: 10px;
@@ -75,6 +95,40 @@
     .btn-update:hover {
       background-color: #218838;
     }
+
+    .imageSection {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+
+
+    .image-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .image-box {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    
+    .image-box img {
+      max-width: 100px;
+      display: block;
+    }
+    
+    .delete-button {
+      margin-top: 10px;
+      color: white;
+      background-color: red;
+      border: none;
+      padding: 5px;
+      cursor: pointer;
+    }
+    
   </style>
 </head>
 <body>
@@ -99,7 +153,23 @@
         rows="1" 
         disabled 
       ><%= note.content %></textarea>
+      <!-- Image Section -->
+      <!-- <form action="/upload" method="POST" enctype="multipart/form-data">
+        <h2>Upload New Images</h2>
+        <input type="file" name="images" multiple>
+        <button type="submit">Upload</button>
+      </form> -->
 
+      <div class="image-container">
+        <% images.forEach((url, index) => { %>
+          <div class="image-box">
+            <img src="<%= url %>" alt="Image <%= index + 1 %>">
+            <input type="checkbox" name="images" value="<%= url %>" checked>
+            <button type="button" class="delete-button">Delete</button>
+          </div>
+        <% }); %>
+      </div>
+      <input type="hidden" name="selectedImages" id="selectedImages">
       <!-- Update Button -->
       <button type="submit" id="updateBtn" class="btn btn-update">Update</button>
     </form>
@@ -110,6 +180,7 @@
 
   <script>
     // Function to enable editing
+    document.getElementById('inputContent').value = document.getElementById('content').value;
     function enableEditing() {
       document.getElementById('title').removeAttribute('disabled');
       const contentField = document.getElementById('content');
@@ -117,20 +188,18 @@
       document.getElementById('editBtn').style.display = 'none';
       document.getElementById('updateBtn').style.display = 'block';
 
-      // Adjust height when enabling editing
       adjustHeight(contentField);
     }
 
     // Adjust textarea height dynamically
     function adjustHeight(el) {
-      el.style.height = 'auto'; // Reset height to calculate new height
-      el.style.height = el.scrollHeight + 'px'; // Set height to match content
+      el.style.height = 'auto';
+      el.style.height = el.scrollHeight + 'px';
     }
 
-    // Auto-resize on input
     document.getElementById('content').addEventListener('input', function () {
       adjustHeight(this);
-      document.getElementById('inputContent').value = this.value; // Update input field value
+      document.getElementById('inputContent').value = this.value;
     });
 
     // Adjust the height initially to match content
@@ -138,6 +207,33 @@
       const contentField = document.getElementById('content');
       adjustHeight(contentField);
     });
+
+
+    document.querySelectorAll('.delete-button').forEach((button, index) => {
+      button.addEventListener('click', () => {
+        const checkbox = document.querySelectorAll('input[type="checkbox"]')[index];
+        checkbox.checked = false; // Uncheck the checkbox
+        checkbox.closest('.image-box').style.display = 'none'; // Hide the image box
+      });
+    });
+  
+      document.querySelector('form[action="/api/note/update/<%= note._id %>"]').addEventListener('submit', (e) => {
+        e.preventDefault();  // Prevent the default form submission
+          const selectedUrls = Array.from(
+              document.querySelectorAll('input[type="checkbox"]:checked')
+          ).map((checkbox) => checkbox.value);
+          // Log the selected URLs, title, and content before sending the form data
+          console.log('Selected URLs:', selectedUrls);
+          console.log('Title:', document.getElementById('title').value);
+          console.log('Content:', document.getElementById('content').value);
+  
+          // Update the hidden input with selected images as JSON
+          document.getElementById('selectedImages').value = JSON.stringify(selectedUrls);
+         // Submit the form after logging
+         e.target.submit();
+      });
+
   </script>
 </body>
 </html>
+
