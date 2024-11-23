@@ -1,14 +1,34 @@
+require("dotenv").config();
 const express = require('express');
 const { create, update, read, remove, index } = require('../components/note');
 const router = express.Router();
 const isLoggedIn = require("../config/isLoggedIn");
 const multer = require('multer');
-const { storage } = require('../config/cloudconfig');
-const upload = multer({ storage });
+
+// Different Folder For Note Images
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('cloudinary').v2;
+// Configure Cloudinary
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET,
+  });
+  
+  // Configure Multer Storage for Cloudinary
+  const storage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+      folder: 'note_images', // Folder name in Cloudinary
+      allowed_formats: ['jpg', 'jpeg', 'png'],
+    },
+  });
+  const upload = multer({ storage });
+
 
 // Post Routes
-router.post('/new',isLoggedIn,upload.single('image'), create);
-router.post('/update/:id',isLoggedIn, update);
+router.post('/new',isLoggedIn, upload.array('images', 10), create);
+router.post('/update/:id', isLoggedIn, update);
 
 // Get Routes
 router.get("/new",isLoggedIn, (req, res) => res.render("createNote"));
