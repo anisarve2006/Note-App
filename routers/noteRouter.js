@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require('express');
-const { create, update, read, remove, index } = require('../components/note');
+const { create, update, read, remove, index, addImages} = require('../components/note');
 const router = express.Router();
 const isLoggedIn = require("../config/isLoggedIn");
 const multer = require('multer');
@@ -29,7 +29,7 @@ cloudinary.config({
 // Post Routes
 router.post('/new',isLoggedIn, upload.array('images', 10), create);
 router.post('/update/:id', isLoggedIn, update);
-
+router.post('/addImages/:id',isLoggedIn, upload.array('images', 10), addImages);
 // Get Routes
 router.get("/new",isLoggedIn, (req, res) => res.render("createNote"));
 router.get('/read/:id',isLoggedIn, read);

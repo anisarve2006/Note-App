@@ -81,11 +81,10 @@ const update = async (req, res) => {
     console.log('Request Body', req.body);
     try {
         const { title, content, selectedImages } = req.body;
-        const noteId = req.params.id;
         const urls = JSON.parse(selectedImages);
 
         // Fetch the existing note
-        const note = await noteModel.findById(noteId);
+        const note = await noteModel.findById(req.params.id);
         if (!note) return res.status(404).json({ message: 'Note not found' });
         // Identify images to delete
         const toDelete = note.notePicture.filter((url) => !urls.includes(url));
@@ -107,11 +106,26 @@ const update = async (req, res) => {
         note.content = content;
         note.notePicture = urls;
         await note.save();
-        res.json({ message: 'Note updated successfully', note });
+        res.redirect('/api/note');
           
     } catch (error) {
         console.log(error);
         res.json({ message: 'Note updation failed'});
+    }
+}
+
+const addImages = async (req, res) => {
+    console.log("AddImages function working");
+    try {
+        const files = req.files;
+        const uploadedUrls = files.map((file) => file.path);
+        const note = await noteModel.findOne({_id: req.params.id});
+        note.notePicture.push(...uploadedUrls);
+        await note.save();
+        res.redirect('/api/note/read/'+req.params.id);
+    } catch (error) {
+        console.log(error);
+        res.json({ message: "Error uploading images" });
     }
 }
 
@@ -130,4 +144,5 @@ module.exports = {
     read,
     remove,
     index,
+    addImages,
 }
