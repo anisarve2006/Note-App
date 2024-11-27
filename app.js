@@ -17,13 +17,10 @@ app.use(express.static(path.join(__dirname,'public')));
 app.use('/api/user/', userRouter);
 app.use('/api/note/', noteRouter);
 
-
 // Routing parameters
 app.get('/' , (req, res) => {
     res.render('dashboard');
 });
-
-
 
 app.listen(process.env.PORT || 3000, () => {
     console.log(`Server is running on port http://localhost:3000/`);

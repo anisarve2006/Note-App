@@ -8,15 +8,11 @@ const create = async (req, res) => {
     try {
         let user = await userModel.findOne({email: req.user.email});
         if (!user) return res.redirect("/api/user/login");
-        console.log(req.file);
-
         // Getting Images 
         const files = req.files;
         const uploadedUrls = files.map((file) => file.path);
-
         let note = await noteModel.create({
             title: req.body.title,
-            // notePicture: req.body.notePicture,
             notePicture: uploadedUrls,
             content: req.body.content,
             userId: user._id,
@@ -36,9 +32,7 @@ const create = async (req, res) => {
 //Index Route
 const index = async (req, res) => {
     try {
-        // console.log(req.user);
         let user = await userModel.findOne({email: req.user.email}).populate("notes");
-        // const allNotes = await noteModel.find({userId: user._id});
         res.render("noteHomePage", { user });
     } catch (error) {
         console.log(error);  
@@ -49,14 +43,10 @@ const index = async (req, res) => {
 const read = async (req, res) => {
     try {
         const note = await noteModel.findOne({ _id: req.params.id });
-        // console.log(note);
         const images = note ? note.notePicture : [];
-        
         if (!note) {
             return res.json({ error: "Note not found or unauthorized access" });
         }
-        console.log(note);
-        console.log(note.id);
         res.render("viewNote", { note, images});
     } catch (error) {
         console.error(error);
@@ -78,11 +68,9 @@ const remove = async (req, res) => {
 }
 
 const update = async (req, res) => {
-    console.log('Request Body', req.body);
     try {
         const { title, content, selectedImages } = req.body;
         const urls = JSON.parse(selectedImages);
-
         // Fetch the existing note
         const note = await noteModel.findById(req.params.id);
         if (!note) return res.status(404).json({ message: 'Note not found' });
@@ -94,20 +82,17 @@ const update = async (req, res) => {
             try {
               if (publicId) {
                 await cloudinary.uploader.destroy(publicId);
-                console.log(`Deleted from Cloudinary: ${publicId}`);
               }
             } catch (error) {
               console.error(`Error deleting ${publicId} from Cloudinary:`, error);
             }
         }
-        
         // Update the Note in MongoDB
         note.title = title;
         note.content = content;
         note.notePicture = urls;
         await note.save();
-        res.redirect('/api/note');
-          
+        res.redirect('/api/note');  
     } catch (error) {
         console.log(error);
         res.json({ message: 'Note updation failed'});
@@ -128,7 +113,6 @@ const addImages = async (req, res) => {
         res.json({ message: "Error uploading images" });
     }
 }
-
 // Utility: Extract public ID from Cloudinary URL
 const extractPublicId = (url) => {
     const parts = url.split('/');
@@ -137,7 +121,6 @@ const extractPublicId = (url) => {
     const folder = parts[parts.length - 2];
     return `${folder}/${publicId}`;
 };
-
 module.exports = {  
     create,
     update,

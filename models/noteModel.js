@@ -6,12 +6,9 @@ const noteSchema = mongoose.Schema({
         ref: "user"
     },
     notePicture: { 
-        type: [String],    // Array of image URLs
+        type: [String],
         default: [] 
     }, 
-    // notePicture : [{
-    //     type:String, 
-    // }],
     title:{
         type:String,
         required:true

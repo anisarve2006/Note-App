@@ -24,10 +24,9 @@ exports.updateImages = async (req, res) => {
       try {
         if (publicId) {
           await cloudinary.uploader.destroy(publicId);
-          console.log(`Deleted from Cloudinary: ${publicId}`);
         }
       } catch (error) {
-        console.error(`Error deleting ${publicId} from Cloudinary:`, error);
+          console.error(`Error deleting ${publicId} from Cloudinary:`, error);
       }
     }
 
@@ -64,6 +63,5 @@ const extractPublicId = (url) => {
   const publicId = fileName.split('.')[0];
   const folder = parts[parts.length - 2];
   const fullId = `${folder}/${publicId}`;
-  console.log(`Extracted public_id: ${fullId}`);
   return fullId;
 };
