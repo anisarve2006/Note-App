@@ -4,6 +4,7 @@ const multer = require('multer');
 const { create, login, update, logout, remove } = require('../components/user');
 const { storage } = require('../config/cloudconfig');
 const upload = multer({ storage });
+const jwt = require("jsonwebtoken");
 
 // POST routes
 // verification requirements 
@@ -25,7 +26,9 @@ router.post('/verify-code', (req, res) => {
     if (storedCode && storedCode === parseInt(code, 10)) {
       deleteVerificationCode(email); // Clear code on successful verification
       console.log('User verified');
-      res.render('noteHomePage');
+      let token = jwt.sign({ email }, process.env.jwtSecret);
+      res.cookie("token", token, {httpOnly:true});
+      res.redirect('/api/note/');
     } else {
       res.status(400).json({ message: 'Invalid or expired verification code' });
     }
