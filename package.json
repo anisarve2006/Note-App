@@ -1,7 +1,8 @@
 {
   "scripts": {
-    "start": "node --env-file=.env app.js",
-    "dev": "node --watch --trace-warnings --env-file=.env app.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm install",
+    "start": "node app.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
