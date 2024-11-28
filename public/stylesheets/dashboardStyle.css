@@ -24,7 +24,7 @@
 
 .header h1 {
     font-size: 2rem;
-    color: #4A90E2;
+    color: #ef3535;
 }
 
 .header p {
@@ -43,7 +43,7 @@
     padding: 10px 20px;
     font-size: 1rem;
     color: #fff;
-    background-color: #4A90E2;
+    background-color: #ee1818;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -78,7 +78,7 @@
 }
 
 .benefits-list strong {
-    color: #4A90E2;
+    color: #e61e1e;
 }
 
 .logout-div{
