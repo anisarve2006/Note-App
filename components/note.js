@@ -5,6 +5,7 @@ const cloudinary = require('cloudinary').v2;
 
 // Functions 
 const create = async (req, res) => {
+    console.log(req.body);
     try {
         let user = await userModel.findOne({email: req.user.email});
         if (!user) return res.redirect("/api/user/login");

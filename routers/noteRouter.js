@@ -27,7 +27,7 @@ cloudinary.config({
 
 
 // Post Routes
-router.post('/new',isLoggedIn, upload.array('images', 10), create);
+router.post('/new', isLoggedIn, upload.array('images', 10), create);
 router.post('/update/:id', isLoggedIn, update);
 router.post('/addImages/:id',isLoggedIn, upload.array('images', 10), addImages);
 // Get Routes
